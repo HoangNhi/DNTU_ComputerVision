@@ -35,3 +35,31 @@ def get_image_list(folder_path):
                 image_list.append(img)
     # Trả về mảng hình ảnh
     return image_list
+
+# Hàm tính ngưỡng Otsu (không dùng skimage)
+def otsu_threshold(image):
+    pixel_counts, bin_edges = np.histogram(image, bins=256, range=(0, 256))
+    total_pixels = image.size
+    current_max, threshold = 0, 0
+    sum_total, sum_background = 0, 0
+    weight_background, weight_foreground = 0, 0
+
+    for i in range(256):
+        sum_total += i * pixel_counts[i]
+
+    for i in range(256):
+        weight_background += pixel_counts[i]
+        if weight_background == 0:
+            continue
+        weight_foreground = total_pixels - weight_background
+        if weight_foreground == 0:
+            break
+        sum_background += i * pixel_counts[i]
+        mean_background = sum_background / weight_background
+        mean_foreground = (sum_total - sum_background) / weight_foreground
+        between_class_variance = weight_background * weight_foreground * (mean_background - mean_foreground) ** 2
+
+        if between_class_variance > current_max:
+            current_max = between_class_variance
+            threshold = i
+    return threshold
