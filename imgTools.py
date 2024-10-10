@@ -2,6 +2,7 @@
 import os
 from PIL import Image
 import numpy as np
+import cv2
 
 
 def load_image(image_path):
@@ -63,3 +64,11 @@ def otsu_threshold(image):
             current_max = between_class_variance
             threshold = i
     return threshold
+
+# Hiển thị hình ảnh bằng thư viện OopenCV
+def display(title, img):
+    cv2.imshow(title, img)
+    # Chờ một khoảng thời gian
+    cv2.waitKey(0)
+    # Đóng window
+    cv2.destroyWindow(title)
