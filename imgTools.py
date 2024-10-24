@@ -72,3 +72,24 @@ def display(title, img):
     cv2.waitKey(0)
     # Đóng window
     cv2.destroyWindow(title)
+
+# Detect Image
+def detect(img):
+    #Gọi file Face Cascade
+    face_cascade = cv2.CascadeClassifier('./FaceCascade/haarcascade_frontalface_default.xml')
+    eye_cascade = cv2.CascadeClassifier('./FaceCascade/haarcascade_eye_tree_eyeglasses.xml')
+    # Chuyển sang ảnh xám
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # Nhận diện khuôn mặt
+    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30,30))
+    # Nhận diện mắt
+    eyes = eye_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=1, minSize=(5,5))
+    # Vẽ hộp chứa khuôn mặt
+    for (x, y, w, h) in faces:
+        cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255,0), 2)
+    # Vẽ hộp chứa khuôn mặt
+    for (x, y, w, h) in eyes:
+        cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0,0), 2)
+    # Trả về ảnh
+    return img
+    
